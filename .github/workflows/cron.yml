@@ -1,20 +1,26 @@
 name: Scheduled run
 on:
   workflow_dispatch:
-#   schedule:
-#     - cron: '0 */6 * * *'
+
 env:
   INSTARGRAM_USERNAME: ${{ secrets.INSTARGRAM_USERNAME }}
   INSTARGRAM_PASSWORD: ${{ secrets.INSTARGRAM_PASSWORD }}
   OTP_SECRET: ${{ secrets.OTP_SECRET }}
   SCHOOL_NAME: ${{ secrets.SCHOOL_NAME }}
   SCHOOL_REGION: ${{ secrets.SCHOOL_REGION }}
+
 jobs:
   gradle:
     runs-on: ubuntu-latest
     steps:
+      - name: Use Node.js 20
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
+
       - name: checkout
         uses: actions/checkout@v2
+
       - uses: robinraju/release-downloader@v1.4
         with:
           latest: true
@@ -23,6 +29,7 @@ jobs:
           zipBall: false
           out-file-path: "${{ github.workspace }}/download/"
           token: "${{ secrets.GITHUB_TOKEN }}"
+      
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
